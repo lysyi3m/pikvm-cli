@@ -1,0 +1,10 @@
+[default]
+url = https://carna.pantheon.keenetic.pro
+username = admin
+password = PF6Gr-BTfk!BLgYbo
+
+[test]
+url = https://example.com
+username = foo
+password = bar
+

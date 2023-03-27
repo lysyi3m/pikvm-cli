@@ -1,0 +1,9 @@
+# Ignore .git & .github folders
+.git
+.github
+
+# Ignore all logfiles
+**/*.log
+
+# Ignore docs
+/README.md
