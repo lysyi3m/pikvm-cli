@@ -1,0 +1,10 @@
+# .pypirc
+.pypirc
+
+# Ignore caches
+__pycache__/
+
+# Build
+build/
+dist/
+*.egg-info/

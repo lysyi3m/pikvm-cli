@@ -5,7 +5,7 @@ import json
 import click
 
 # The path of the configuration file
-CONFIG_FILE_PATH = os.path.expanduser("~/.pikvm-cli")
+CONFIG_FILE_PATH = os.path.expanduser('~/.pikvm-cli')
 
 # Load configuration from the configuration file
 config = configparser.ConfigParser()
@@ -54,6 +54,7 @@ def make_request(method, url, username, password, params={}):
       },
       params=params,
       timeout=5,
+      verify=False,
     )
 
     response.raise_for_status()
@@ -66,21 +67,23 @@ def make_request(method, url, username, password, params={}):
   click.echo(json.dumps(data, indent=2))
 
 @click.group()
-def cli():
+@click.version_option("1.0.0")
+def main():
   """
   CLI tool to control and manage PIKVM devices
   """
   pass
 
-@cli.command()
+@main.command()
 @click.option('--name', '-n', default='default', help='Name of the configuration')
 @click.option('--url', prompt=True, help='PIKVM URL')
 @click.option('--username', '-u', prompt=True, help='PIKVM user name')
 @click.option('--password', '-p', prompt=True, hide_input=True, help='PIKVM user password')
 def configure(name, url, username, password):
   """
-  Configures the PIKVM connection
+  Configures the PIKVM connection(s)
 
+  \b
   Args:
     name: (str) the name of the PIKVM configuration to use (default: "default")
     url (str): The URL of the PIKVM
@@ -96,12 +99,13 @@ def configure(name, url, username, password):
   with open(CONFIG_FILE_PATH, 'w') as configfile:
     config.write(configfile)
 
-@cli.command()
+@main.command()
 @click.option('--name', default='default', help='Name of the configuration')
 def info(name):
   """
   Retrieves the device information from the PIKVM
 
+  \b
   Args:
     name: (str) the name of the PIKVM configuration to use (default: "default")
   """
@@ -109,13 +113,14 @@ def info(name):
 
   make_request('GET', f'{url}/api/info', username, password)
 
-@cli.command()
-@click.option('--name', '-n', default='default', help="Name of the configuration")
-@click.argument('action', type=click.Choice(['on', 'off', 'off_hard', 'reset']))
+@main.command()
+@click.option('--name', '-n', default='default', help='Name of the configuration')
+@click.argument('action', type=click.Choice(['on', 'off', 'off_hard', 'reset', 'status']))
 def atx(name, action):
   """
   Power management control for the PIKVM device's ATX
 
+  \b
   Args:
     name: (str) the name of the PIKVM configuration to use (default: "default")
     action: (str) the power management action to perform:
@@ -123,8 +128,12 @@ def atx(name, action):
       * "off": perform a graceful shutdown of the device
       * "off_hard": perform a forced shutdown of the device (with a confirmation prompt)
       * "reset": perform a forced reset of the device (with a confirmation prompt)
+      * "status": get the current power status of the device
   """
   url, username, password = get_config(name)
+
+  if action == 'status':
+    return make_request('GET', f'{url}/api/atx', username, password)
 
   if action == 'off_hard' and not click.confirm('This will forcefully turn off the device. Are you sure?'):
     return
@@ -132,7 +141,7 @@ def atx(name, action):
   if action == 'reset' and not click.confirm('This will forcefully reset the device. Are you sure?'):
     return
 
-  make_request('POST', f'{url}/api/atx/power', username, password, { 'action': action, 'wait': 1 })
+  make_request('POST', f'{url}/api/atx/power', username, password, { 'action': action })
 
 if __name__ == '__main__':
-  cli()
+  main()
