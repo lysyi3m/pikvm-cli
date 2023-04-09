@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
   name='pikvm-cli',
-  version='1.0.2',
+  version='1.0.3',
   author='Emil Kashkevich',
   author_email='emil.kashkevich@gmail.com',
   description='CLI tool for managing PIKVM device',

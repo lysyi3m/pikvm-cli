@@ -4,6 +4,8 @@ import requests
 import json
 import click
 
+requests.packages.urllib3.disable_warnings()
+
 # The path of the configuration file
 CONFIG_FILE_PATH = os.path.expanduser('~/.pikvm-cli')
 
@@ -67,7 +69,7 @@ def make_request(method, url, username, password, params={}):
   click.echo(json.dumps(data, indent=2))
 
 @click.group()
-@click.version_option("1.0.2")
+@click.version_option("1.0.3")
 def main():
   """
   CLI tool to control and manage PIKVM devices
