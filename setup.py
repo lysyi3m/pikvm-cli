@@ -1,18 +1,12 @@
 from setuptools import setup, find_packages
 from io import open
-from os import path
 
-import pathlib
-
-with open(path.join(pathlib.Path(__file__).parent, 'README.md'), 'r', encoding='utf-8') as f:
+with open('README.md', 'r', encoding='utf-8') as f:
   long_description = f.read()
-
-with open(path.join(pathlib.Path(__file__).parent, 'requirements.txt'), 'r', encoding='utf-8') as f:
-  install_requires = f.read().splitlines()
 
 setup(
   name='pikvm-cli',
-  version='1.0.1',
+  version='1.0.2',
   author='Emil Kashkevich',
   author_email='emil.kashkevich@gmail.com',
   description='CLI tool for managing PIKVM device',
@@ -25,7 +19,10 @@ setup(
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
   ],
-  install_requires=install_requires,
+  install_requires=[
+    'click==8.1.3',
+    'requests==2.28.2'
+  ],
   entry_points={
     'console_scripts': [
       'pikvm-cli=pikvm_cli.__main__:main',
