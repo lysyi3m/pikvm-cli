@@ -67,7 +67,7 @@ def make_request(method, url, username, password, params={}):
   click.echo(json.dumps(data, indent=2))
 
 @click.group()
-@click.version_option("1.0.0")
+@click.version_option("1.0.1")
 def main():
   """
   CLI tool to control and manage PIKVM devices
